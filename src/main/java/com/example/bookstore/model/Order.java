@@ -21,8 +21,7 @@ public class Order {
     private String status;
     public Order() {
     }
-    public Order(int id, User user, List<Book> books, double totalAmount, String status) {
-        this.id = id;
+    public Order(User user, List<Book> books, double totalAmount, String status) {
         this.user = user;
         this.books = books;
         this.totalAmount = totalAmount;

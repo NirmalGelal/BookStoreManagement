@@ -3,12 +3,13 @@ package com.example.bookstore.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "\"user\"")
+
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private int id;
-    @Column(name = "Username")
+    @Column(name = "Username", unique = true)
     private String username;
     @Column(name = "Password")
     private String password;
