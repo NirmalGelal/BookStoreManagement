@@ -1,18 +1,12 @@
 package com.example.bookstore.dto.response;
-import org.springframework.stereotype.Component;
 
-@Component
 public class Response<T> {
 
     private String message;
     private T data;
 
-//    public Response( String message, T data) {
-//        this.message = message;
-//        this.data = data;
-//    }
-
-
+    public Response() {
+    }
     public String getMessage() {
         return message;
     }

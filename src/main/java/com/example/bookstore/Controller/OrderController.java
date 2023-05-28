@@ -1,28 +1,37 @@
 package com.example.bookstore.Controller;
 
 import com.example.bookstore.dto.request.OrderRequestDto;
+import com.example.bookstore.dto.request.PaymentRequestDto;
+import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.Order;
 import com.example.bookstore.service.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class OrderController {
-
+    @Autowired
     private OrderServiceImpl orderServiceImpl;
 
-    @Autowired
-    public OrderController(OrderServiceImpl orderServiceImpl) {
-        this.orderServiceImpl = orderServiceImpl;
-    }
+//    @Autowired
+//    public OrderController(OrderServiceImpl orderServiceImpl) {
+//        this.orderServiceImpl = orderServiceImpl;
+//    }
 
     @PostMapping("/place-order")
-    public Order placeOrder(@RequestBody Order order){
-        return orderServiceImpl.placeOrder(order);
+    public Response placeOrder(@RequestBody OrderRequestDto orderRequestDto){
+        return orderServiceImpl.placeOrder(orderRequestDto);
+    }
+
+    @PostMapping("/checkout")
+    public Response checkout(@RequestBody PaymentRequestDto paymentRequestDto){
+        return orderServiceImpl.processPayment(paymentRequestDto);
+    }
+
+    @GetMapping("/orders")
+    public Response getAllOrders(){
+        return orderServiceImpl.getAllOrders();
     }
 }

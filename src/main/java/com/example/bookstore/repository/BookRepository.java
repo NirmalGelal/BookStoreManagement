@@ -17,7 +17,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("select b from Book b where lower(b.author) like %:keyword% or lower(b.title) like %:keyword% or lower(b.genre) like %:keyword%")
     List<Book> searchBook(@Param("keyword") String keyword);
     Book save(Book book);
-    String deleteBookById(int id);
+    Book deleteBookById(int id);
 
     //other implementations
 

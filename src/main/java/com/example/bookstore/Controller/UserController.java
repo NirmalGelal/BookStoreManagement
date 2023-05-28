@@ -1,6 +1,7 @@
 package com.example.bookstore.Controller;
 
 import com.example.bookstore.dto.request.LoginRequestDto;
+import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.User;
 import com.example.bookstore.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +19,25 @@ public class UserController {
     }
 
     @PostMapping ("/register")
-    public User registerUser(@RequestBody User user){
+    public Response registerUser(@RequestBody User user){
         return userServiceImpl.registerUser(user);
     }
 
     @GetMapping("/users")
-    public List<User> findAll(){
+    public Response findAll(){
         return  userServiceImpl.findAll();
     }
     @GetMapping("/users/{id}")
-    public User findById(@PathVariable int id){
+    public Response findById(@PathVariable int id){
         return  userServiceImpl.findById(id);
     }
     @PostMapping("/login")
-    public User loginUser(@RequestBody LoginRequestDto loginRequestDto){
+    public Response loginUser(@RequestBody LoginRequestDto loginRequestDto){
         return userServiceImpl.loginUser(loginRequestDto);
     }
 
     @PostMapping("/update/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User user){
+    public Response updateUser(@PathVariable int id, @RequestBody User user){
         return userServiceImpl.updateUser(id,user);
     }
 

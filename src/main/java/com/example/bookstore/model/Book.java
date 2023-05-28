@@ -1,10 +1,8 @@
 package com.example.bookstore.model;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 @Entity
-@Component
 @Table (name = "Book")
 public class Book {
     @Id

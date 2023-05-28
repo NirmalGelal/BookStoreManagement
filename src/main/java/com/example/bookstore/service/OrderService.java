@@ -1,15 +1,15 @@
 package com.example.bookstore.service;
 
 import com.example.bookstore.dto.request.OrderRequestDto;
+import com.example.bookstore.dto.request.PaymentRequestDto;
+import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.Order;
 
 
 public interface OrderService {
 //    retrieving orders, updating order status, and processing payments
-//    Order placeOrder(OrderRequestDto orderRequestDto);
-
-    Order placeOrder(Order order);
-    public Order retrieveOrder();
-    public void updateOrder();
-    public void processPayment();
+    public Response placeOrder(OrderRequestDto orderRequestDto);
+    public Response updateOrder();
+    public Response getAllOrders();
+    public Response processPayment(PaymentRequestDto paymentRequestDto);
 }

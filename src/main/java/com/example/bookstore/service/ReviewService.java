@@ -1,12 +1,13 @@
 package com.example.bookstore.service;
 
+import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.Book;
 
 
 
 public interface ReviewService {
 //    adding reviews, retrieving reviews for a book, and calculating average ratings
-    public void addReview(String comment);
-    public String retrieveReview(Book book);
-    public int calculateAverageRating(Book book);
+    public Response addReview(String comment);
+    public Response retrieveReview(Book book);
+    public Response calculateAverageRating(Book book);
 }

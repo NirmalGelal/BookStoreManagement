@@ -1,19 +1,22 @@
 package com.example.bookstore.model;
 
 import jakarta.persistence.*;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table (name = "Order")
-public class Order {
+@ToString
+@Table (name = "\"order\"")
+public class Order implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private int id;
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     private User user;
-    @OneToMany (fetch = FetchType.LAZY)
+    @OneToMany (fetch = FetchType.EAGER)
     private List<Book> books;
     @Column(name = "TotalAmount")
     private double totalAmount;

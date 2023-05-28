@@ -1,7 +1,10 @@
 package com.example.bookstore.dto.request;
 
+
+import java.util.List;
+
 public class OrderRequestDto {
-    public OrderRequestDto(int book_id, int user_id) {
+    public OrderRequestDto(List<Integer> book_id, int user_id) {
         this.book_id = book_id;
         this.user_id = user_id;
     }
@@ -9,11 +12,11 @@ public class OrderRequestDto {
     public OrderRequestDto() {
     }
 
-    public int getBook_id() {
+    public List<Integer> getBook_id() {
         return book_id;
     }
 
-    public void setBook_id(int book_id) {
+    public void setBook_id(List<Integer> book_id) {
         this.book_id = book_id;
     }
 
@@ -25,6 +28,6 @@ public class OrderRequestDto {
         this.user_id = user_id;
     }
 
-    private int book_id;
+    private List<Integer> book_id;
     private int user_id;
 }
