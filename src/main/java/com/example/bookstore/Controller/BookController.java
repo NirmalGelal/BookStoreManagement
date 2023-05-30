@@ -48,7 +48,7 @@ public class BookController {
     }
 
     @PutMapping("/update-stock")
-    public Response addBook(@RequestParam int bookId, int availability, HttpServletRequest request){
+    public Response updateStock(@RequestParam int bookId, int availability, HttpServletRequest request){
         if (request.getSession().getAttribute("userRole").equals("admin")){
             return bookServiceImpl.updateBookAvailability(bookId, availability);
         }
