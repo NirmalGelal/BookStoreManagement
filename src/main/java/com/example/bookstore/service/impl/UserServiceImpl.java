@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response findById(int id) {
+    public Response findUserById(int id) {
         Response<User> response = new Response<>();
         User user = userRepository.findById(id);
         if (user!=null){
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response findAll() {
+    public Response findAllUsers() {
         Response<List<User>> response = new Response<>();
         response.setMessage("Users retrieved successfully");
         response.setData(userRepository.findAll());

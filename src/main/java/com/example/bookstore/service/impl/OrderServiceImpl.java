@@ -1,7 +1,7 @@
 package com.example.bookstore.service.impl;
-
 import com.example.bookstore.dto.request.OrderRequestDto;
 import com.example.bookstore.dto.request.PaymentRequestDto;
+import com.example.bookstore.dto.request.UpdateOrderRequestDto;
 import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.Order;
@@ -27,14 +27,16 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartRepository shoppingCartRepository;
     private UserRepository userRepository;
     private BookRepository bookRepository;
+    private ShoppingCartServiceImpl shoppingCartServiceImpl;
 
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, UserRepository userRepository, BookRepository bookRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, UserRepository userRepository, BookRepository bookRepository, ShoppingCartServiceImpl shoppingCartServiceImpl) {
         this.orderRepository = orderRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
+        this.shoppingCartServiceImpl = shoppingCartServiceImpl;
 
     }
 
@@ -44,11 +46,11 @@ public class OrderServiceImpl implements OrderService {
         List<Book> bookList = new ArrayList<>() {
         };
         double price = 0;
-        for(Integer book_id: orderRequestDto.getBook_id()){
+        for(Integer book_id: orderRequestDto.getBookIds()){
             bookList.add(bookRepository.searchById(book_id));
             price += bookRepository.searchById(book_id).getPrice();
         }
-        User user = userRepository.findById(orderRequestDto.getUser_id());
+        User user = userRepository.findById(orderRequestDto.getUserId());
 
         Order order = new Order();
         order.setUser(user);
@@ -58,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         response.setMessage("order placed");
-        response.setData(order);
+        response.setData("");
         return response;
     }
     @Override
@@ -89,8 +91,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response updateOrder() {
-        Response response = new Response();
+    @Transactional
+    public Response updateOrder(UpdateOrderRequestDto updateOrderRequestDto) {
+        List<Book> books = new ArrayList<>();
+        for (int bookId:updateOrderRequestDto.getBookIds()){
+            books.add(bookRepository.searchById(bookId));
+        }
+        User user = userRepository.findById(updateOrderRequestDto.getUserId());
+
+        Order order = new Order();
+        order.setBooks(books);
+        order.setUser(user);
+        order.setTotalAmount(shoppingCartServiceImpl.calculateTotalAmount(books));
+        order.setStatus("ordered");
+
+//        orderRepository.updateOrderById(updateOrderRequestDto.getOrderId(),order);
+
+        orderRepository.deleteById(updateOrderRequestDto.getOrderId());
+        orderRepository.save(order);
+        Response response = new Response<>();
+        response.setMessage("Order updated successfully");
+        response.setData(order);
         return response;
     }
 

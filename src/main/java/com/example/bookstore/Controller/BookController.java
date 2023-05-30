@@ -39,8 +39,15 @@ public class BookController {
     // add book passing book object in body
     @PostMapping("/add")
     public Response addBook(@RequestBody Book book){
-        return bookServiceImpl.addBook(book);
+        return bookServiceImpl.addNewBook(book);
     }
+
+    @PutMapping("/update-stock")
+    public Response addBook(@RequestParam int bookId, int availability){
+        return bookServiceImpl.updateBookAvailability(bookId, availability);
+    }
+
+
 
     // delete book based on id
     @DeleteMapping("/delete/{id}")

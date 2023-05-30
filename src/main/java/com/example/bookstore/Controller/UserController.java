@@ -24,19 +24,18 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Response findAll(){
-        return  userServiceImpl.findAll();
+    public Response findAllUsers(){
+        return  userServiceImpl.findAllUsers();
     }
     @GetMapping("/users/{id}")
-    public Response findById(@PathVariable int id){
-        return  userServiceImpl.findById(id);
+    public Response findUserById(@PathVariable int id){
+        return  userServiceImpl.findUserById(id);
     }
     @PostMapping("/login")
     public Response loginUser(@RequestBody LoginRequestDto loginRequestDto){
         return userServiceImpl.loginUser(loginRequestDto);
     }
-
-    @PostMapping("/update/{id}")
+    @PutMapping ("/update/{id}")
     public Response updateUser(@PathVariable int id, @RequestBody User user){
         return userServiceImpl.updateUser(id,user);
     }

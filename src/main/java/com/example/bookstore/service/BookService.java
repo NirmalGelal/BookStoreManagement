@@ -6,11 +6,12 @@ import com.example.bookstore.model.Book;
 import java.util.List;
 
 public interface BookService {
-    public Response addBook(Book book);
+    public Response addNewBook(Book book);
+//    public Response addStock(int availability);
     public Response getAllBooks();
     public Response searchBook(String keyword);
     public Response searchById(int id);
-    public Response updateBookAvailability(Book book, int quantity);
+    public Response updateBookAvailability(int bookId, int quantity);
     public Response deleteBookById(int id);
 
 }

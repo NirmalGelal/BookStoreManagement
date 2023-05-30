@@ -2,6 +2,7 @@ package com.example.bookstore.repository;
 
 
 import com.example.bookstore.model.Order;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Modifying
     @Query("UPDATE Order o SET o.status = :status WHERE o.id = :id")
     void update(@Param("id") int id, @Param("status") String status);
+
+
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE Order o SET o.user = :#{#newOrder.user}, o.books = :#{#newOrder.books}, o.totalAmount = :#{#newOrder.totalAmount}, o.status = :#{#newOrder.status} WHERE o.id = :orderId")
+//    void updateOrderById(Integer orderId, Order newOrder);
+
 }

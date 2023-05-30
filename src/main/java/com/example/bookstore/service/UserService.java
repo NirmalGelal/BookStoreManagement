@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface UserService {
     public Response registerUser(User user);
-    public Response findAll();
-    public Response findById(int id);
+    public Response findAllUsers();
+    public Response findUserById(int id);
     public Response loginUser(LoginRequestDto loginRequestDto);
     public Response updateUser(int id,User user);
 }

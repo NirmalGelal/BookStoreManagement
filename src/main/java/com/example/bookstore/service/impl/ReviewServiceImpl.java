@@ -79,10 +79,7 @@ public class ReviewServiceImpl implements ReviewService
             ratingSum += review.getRating();
             counter++;
         }
-        System.out.println(ratingSum);
-        System.out.println(counter);
         float average = (float) ratingSum/counter;
-        System.out.println(average);
 
         averageReviewResponseDto.setAverageReview(average);
         averageReviewResponseDto.setBookId(bookId);
