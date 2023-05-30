@@ -4,30 +4,30 @@ package com.example.bookstore.dto.request;
 import java.util.List;
 
 public class OrderRequestDto {
-    public OrderRequestDto(List<Integer> book_id, int user_id) {
-        this.book_id = book_id;
-        this.user_id = user_id;
+    public OrderRequestDto(List<Integer> bookIds, int userId) {
+        this.bookIds = bookIds;
+        this.userId = userId;
     }
 
     public OrderRequestDto() {
     }
 
-    public List<Integer> getBook_id() {
-        return book_id;
+    public List<Integer> getBookIds() {
+        return bookIds;
     }
 
-    public void setBook_id(List<Integer> book_id) {
-        this.book_id = book_id;
+    public void setBookIds(List<Integer> bookIds) {
+        this.bookIds = bookIds;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    private List<Integer> book_id;
-    private int user_id;
+    private List<Integer> bookIds;
+    private int userId;
 }

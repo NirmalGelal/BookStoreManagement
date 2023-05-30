@@ -7,7 +7,6 @@ import com.example.bookstore.model.Review;
 
 
 public interface ReviewService {
-//    adding reviews, retrieving reviews for a book, and calculating average ratings
     public Response addReview(ReviewRequestDto reviewRequestDto);
     public Response retrieveReview(int bookId);
     public Response calculateAverageRating(int bookId);

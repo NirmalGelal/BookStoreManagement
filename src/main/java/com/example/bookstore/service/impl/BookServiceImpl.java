@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,10 +21,11 @@ public class BookServiceImpl implements BookService {
         this.bookRepository = bookRepository;
     }
     @Override
-    public Response addBook(Book book) {
+    public Response addNewBook(Book book) {
 
         Response<Book> response = new Response<>();
         response.setMessage("Book added successfully");
+
         Book addedBook = bookRepository.save(book);
         response.setData(addedBook);
         return response;
@@ -38,12 +40,13 @@ public class BookServiceImpl implements BookService {
         return response;
     }
     @Override
-    public Response deleteBookById(int id) {
-        Response<Book> response = new Response<>();
-        Book book = bookRepository.deleteBookById(id);
-        if(book != null) {
+    public Response deleteBookById(int bookId) {
+        Response response = new Response<>();
+        Optional<Book> book = bookRepository.findById(bookId);
+        if(book.isPresent()) {
+            bookRepository.deleteBookById(bookId);
             response.setMessage("Book deleted successfully");
-            response.setData(book);
+            response.setData("BookId: "+ bookId+ " deleted");
             return response;
         }
         response.setMessage("Invalid id");
@@ -79,8 +82,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Response updateBookAvailability(Book book, int quantity) {
-        return null;
+    public Response updateBookAvailability(int bookId, int quantity) {
+        Response response = new Response();
+        bookRepository.updateById(bookId, quantity);
+        int newStock = bookRepository.findById(bookId).get().getAvailability();
+        response.setData("New stock quantity of bookId "+ bookId+" is "+ newStock );
+        response.setMessage("Availability updated.");
+        return response;
     }
 
 

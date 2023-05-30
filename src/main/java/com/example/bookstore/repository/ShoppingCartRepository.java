@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart,Integer> {
+    public ShoppingCart save(ShoppingCart shoppingCart);
+    public ShoppingCart deleteById(int id);
+
+//    @Query("select s from ShoppingCart s where s.id=:id")
+//    public ShoppingCart searchById(int id);
 }
