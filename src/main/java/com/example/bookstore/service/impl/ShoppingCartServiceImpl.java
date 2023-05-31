@@ -16,63 +16,96 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShoppingCartServiceImpl implements ShoppingCartService
-{
+public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCartRepository shoppingCartRepository;
     private UserRepository userRepository;
     private BookRepository bookRepository;
+
     @Autowired
-    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, UserRepository userRepository, BookRepository bookRepository){
+    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, UserRepository userRepository, BookRepository bookRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
     }
+
     @Override
-    public Response<ShoppingCart> addToCart(List<Integer> bookIds, int userId) {
-
-        List<Book> books = new ArrayList<>();
-        for(int book_id:bookIds){
-            Book book = bookRepository.searchById(book_id);
-            books.add(book);
-        }
-        double totalAmount = calculateTotalAmount(books);
-        User user = userRepository.findById(userId);
-
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setBooks(books);
-        shoppingCart.setUser(user);
-        shoppingCart.setTotalAmount(totalAmount);
-
-        ShoppingCart cart = shoppingCartRepository.save(shoppingCart);
+    public Response<ShoppingCart> addToCart(int bookId, int userId) {
 
         Response<ShoppingCart> response = new Response<>();
-        response.setMessage("Added to ShoppingCart");
-        response.setData(cart);
+
+        if (shoppingCartRepository.findByUserId(userId) != null) {
+            ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+
+            List<Book> books = shoppingCart.getBooks();
+            Book book = bookRepository.findById(bookId).get();
+            books.add(book);
+
+            double totalAmount = calculateTotalAmount(books);
+            shoppingCart.setTotalAmount(totalAmount);
+            shoppingCart.setBooks(books);
+            shoppingCartRepository.save(shoppingCart);
+            response.setMessage("added to shopping cart");
+            response.setData(shoppingCart);
+            return response;
+        }
+        ShoppingCart shoppingCart = new ShoppingCart();
+        ArrayList<Book> books = new ArrayList<>();
+        Book book = bookRepository.findById(bookId).get();
+        books.add(book);
+        double totalAmount = calculateTotalAmount(books);
+        User user = userRepository.findById(userId);
+        shoppingCart.setUser(user);
+        shoppingCart.setBooks(books);
+        shoppingCart.setTotalAmount(totalAmount);
+        shoppingCartRepository.save(shoppingCart);
+        response.setMessage("added to shopping cart");
+        response.setData(shoppingCart);
+        return response;
+    }
+
+    @Override
+    public Response<ShoppingCart> removeFromCart(int bookId, int userId) {
+
+        Response<ShoppingCart> response = new Response<>();
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+        List<Book> books = shoppingCart.getBooks();
+        List<Integer> bookIds = new ArrayList<>();
+        for (Book b : books) {
+            bookIds.add(b.getId());
+
+        }
+        for (int i = 0; i < books.size() ; i++) {
+            if(books.get(i).getId()==bookId){
+                books.remove(books.get(i));
+            }
+        }
+
+        if (bookIds.contains(bookId)) {
+//            books.remove(bookRepository.findById(bookId));
+            shoppingCart.setBooks(books);
+            shoppingCartRepository.save(shoppingCart);
+            response.setMessage("Book successfully removed from cart");
+            return response;
+        }
+        response.setMessage("Invalid bookId");
+        response.setData(null);
         return response;
 
     }
 
     @Override
-    public Response<ShoppingCart> removeFromCart(int shoppingCartId) {
-        Optional<ShoppingCart> shoppingCart = shoppingCartRepository.findById(shoppingCartId);
-        Response<ShoppingCart> response = new Response<>();
-        if(shoppingCart.isPresent()){
-            response.setMessage("Removed successfully from cart");
-            shoppingCartRepository.deleteById(shoppingCartId);
-            response.setMessage(String.format("Shopping cart with ID: %d successfully deleted.",shoppingCartId));
-            return response;
-        }else{
-            response.setMessage(String.format("Shopping cart with ID: %d does not exist.",shoppingCartId));
-        }
-
+    public Response clearCart(int userId) {
+        Response response = new Response<>();
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+        shoppingCartRepository.delete(shoppingCart);
+        response.setMessage("Cart cleared successfully");
         return response;
-
     }
 
     @Override
     public double calculateTotalAmount(List<Book> books) {
         double totalAmount = 0;
-        for(Book book:books){
+        for (Book book : books) {
             totalAmount += book.getPrice();
         }
         return totalAmount;

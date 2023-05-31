@@ -8,8 +8,10 @@ import com.example.bookstore.model.Order;
 
 
 public interface OrderService {
-    public Response placeOrder(OrderRequestDto orderRequestDto);
-    public Response<Order> updateOrder(UpdateOrderRequestDto updateOrderRequestDto);
+    public Response placeOrder(OrderRequestDto orderRequestDto, int userId);
+    public Response<Order> updateOrder(UpdateOrderRequestDto updateOrderRequestDto, int userId);
     public Response getAllOrders();
-    public Response processPayment(PaymentRequestDto paymentRequestDto);
+    public Response processPayment(PaymentRequestDto paymentRequestDto, int userId);
+
+    public Response cancelOrder(int userId);
 }

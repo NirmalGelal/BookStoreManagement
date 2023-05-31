@@ -59,13 +59,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response updateUser(int id,User user) {
         Response<User> response = new Response<>();
-        User tempUser = userRepository.findById(id);
-        tempUser.setUsername(user.getUsername());
-        tempUser.setPassword(user.getPassword());
-        tempUser.setEmail(user.getEmail());
-        tempUser.setRole(user.getRole());
-        response.setMessage("User updated successfully");
-        response.setData(userRepository.save(tempUser));
+        if(userRepository.findById(id)!=null){
+            User tempUser = userRepository.findById(id);
+            tempUser.setUsername(user.getUsername());
+            tempUser.setPassword(user.getPassword());
+            tempUser.setEmail(user.getEmail());
+            tempUser.setRole(user.getRole());
+            response.setMessage("User updated successfully");
+            response.setData(userRepository.save(tempUser));
+            return response;
+        }
+        response.setMessage("Invalid id");
         return response;
 
     }

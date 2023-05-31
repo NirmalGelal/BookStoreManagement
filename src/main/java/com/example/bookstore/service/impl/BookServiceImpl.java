@@ -44,9 +44,10 @@ public class BookServiceImpl implements BookService {
         Response response = new Response<>();
         Optional<Book> book = bookRepository.findById(bookId);
         if(book.isPresent()) {
-            bookRepository.deleteBookById(bookId);
+            int newAvailability = book.get().getAvailability() - 1;
+            bookRepository.updateById(bookId, newAvailability);
             response.setMessage("Book deleted successfully");
-            response.setData("BookId: "+ bookId+ " deleted");
+            response.setData("New stock updated");
             return response;
         }
         response.setMessage("Invalid id");

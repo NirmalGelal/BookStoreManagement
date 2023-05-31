@@ -25,29 +25,32 @@ public class UserController {
 
     @GetMapping("/users")
     public Response findAllUsers(HttpServletRequest request){
-        String role = (String)request.getSession().getAttribute("userRole");
-        if (role!=null && role.equals("admin")){
-            return  userServiceImpl.findAllUsers();
-        }
-        else {
-            Response<String> response = new Response<>();
-            response.setMessage("User not authorized, please login first.");
-            response.setData(null);
+        Response<String> response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
             return response;
         }
+        else if (request.getSession().getAttribute("userRole").equals("admin")){
+            return  userServiceImpl.findAllUsers();
+        }
+        response.setMessage("User not authorized, please login as admin.");
+        response.setData(null);
+        return response;
+
     }
     @GetMapping("/users/{id}")
     public Response findUserById(@PathVariable int id, HttpServletRequest request){
-        String role = (String)request.getSession().getAttribute("userRole");
-        if (role!=null && role.equals("admin")){
-            return  userServiceImpl.findUserById(id);
-        }
-        else {
-            Response<String> response = new Response<>();
-            response.setMessage("User not authorized, please login first.");
-            response.setData(null);
+        Response<String> response = new Response<>();
+        if (request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
             return response;
         }
+        else if (request.getSession().getAttribute("userRole").equals("admin")){
+            return  userServiceImpl.findUserById(id);
+        }
+        response.setMessage("User not authorized, please login by admin.");
+        response.setData(null);
+        return response;
     }
     @PostMapping("/login")
     public Response loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request){
@@ -64,9 +67,11 @@ public class UserController {
 
     @PostMapping("/logout")
     public Response logout(HttpServletRequest request){
+        int userId = (Integer) request.getSession().getAttribute("userId");
+        String role = (String) request.getSession().getAttribute("userRole");
         request.getSession().invalidate();
         Response response = new Response<>();
-        response.setMessage("logged out successfully");
+        response.setMessage("User Id: "+userId+", Role: "+ role +", logged out successfully");
         return response;
     }
 
@@ -74,12 +79,15 @@ public class UserController {
 
     @PutMapping ("/update/{id}")
     public Response updateUser(@PathVariable int id, @RequestBody User user, HttpServletRequest request){
-
-        if(id==(Integer)request.getSession().getAttribute("userId") || request.getSession().getAttribute("userRole").equals("admin")){
+        Response<String> response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+        else if(id==(Integer)request.getSession().getAttribute("userId") || request.getSession().getAttribute("userRole").equals("admin")){
             return userServiceImpl.updateUser(id,user);
         }
-        Response<String> response = new Response<>();
-        response.setMessage("You cannot update information about other user unless you are admin.");
+        response.setMessage("User not authorized to perform action");
         return response;
     }
 

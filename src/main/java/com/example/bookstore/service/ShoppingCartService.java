@@ -8,8 +8,9 @@ import java.util.List;
 
 
 public interface ShoppingCartService {
-    public Response<ShoppingCart> addToCart(List<Integer> book_ids, int user_id);
-    public Response<ShoppingCart> removeFromCart(int shoppingCartId);
+    public Response<ShoppingCart> addToCart(int bookId, int userId);
+    public Response<ShoppingCart> removeFromCart(int bookId, int userId);
+    public Response clearCart(int userId);
     public double calculateTotalAmount(List<Book> books);
 
 }

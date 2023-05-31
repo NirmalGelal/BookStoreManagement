@@ -21,32 +21,72 @@ public class OrderController {
     }
 
     @PostMapping("/place-order")
-    public Response placeOrder(@RequestBody OrderRequestDto orderRequestDto){
-        return orderServiceImpl.placeOrder(orderRequestDto);
+    public Response placeOrder(@RequestBody OrderRequestDto orderRequestDto, HttpServletRequest request){
+        Response response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+
+        else if(request.getSession().getAttribute("userRole").equals("user")){
+            return orderServiceImpl.placeOrder(orderRequestDto,(Integer) request.getSession().getAttribute("userId"));
+        }
+        response.setMessage("Admin cannot place an order");
+        return  response;
     }
 
     @PostMapping("/checkout")
-    public Response checkout(@RequestBody PaymentRequestDto paymentRequestDto){
-        return orderServiceImpl.processPayment(paymentRequestDto);
+    public Response checkout(@RequestBody PaymentRequestDto paymentRequestDto, HttpServletRequest request){
+        Response response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+        return orderServiceImpl.processPayment(paymentRequestDto,(Integer)request.getSession().getAttribute("userId"));
     }
 
     @GetMapping("/orders")
     public Response getAllOrders(HttpServletRequest request){
-        if(request.getSession().getAttribute("userRole").equals("admin")){
+        Response response = new Response<>();
+
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+
+        }
+        else if(request.getSession().getAttribute("userRole").equals("admin")){
             return orderServiceImpl.getAllOrders();
         }
-        Response response = new Response<>();
         response.setMessage("User not authorized to view orders.");
         return response;
     }
 
     @PutMapping("/update-order")
     public Response<Order> updateOrder(@RequestBody UpdateOrderRequestDto updateOrderRequestDto, HttpServletRequest request){
-        if(request.getSession().getAttribute("userRole").equals("admin")){
-            return orderServiceImpl.updateOrder(updateOrderRequestDto);
-        }
         Response response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+        else if(request.getSession().getAttribute("userRole").equals("user")){
+            return orderServiceImpl.updateOrder(updateOrderRequestDto,(Integer) request.getSession().getAttribute("userId")
+            );
+        }
         response.setMessage("User not authorized to update orders.");
+        return response;
+    }
+
+    @PostMapping("/cancel-order")
+    public Response<String> cancelOrder(HttpServletRequest request){
+        Response response = new Response<>();
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+        else if (request.getSession().getAttribute("userRole").equals("user")){
+            return orderServiceImpl.cancelOrder((Integer) request.getSession().getAttribute("userId"));
+        }
+        response.setMessage("User not authorized to cancel orders.");
         return response;
     }
 }

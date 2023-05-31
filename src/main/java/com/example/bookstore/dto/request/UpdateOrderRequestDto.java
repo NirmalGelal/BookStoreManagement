@@ -14,5 +14,4 @@ import java.util.List;
 public class UpdateOrderRequestDto {
     private int orderId;
     private List<Integer> bookIds;
-    private int userId;
 }

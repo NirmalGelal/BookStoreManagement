@@ -39,20 +39,32 @@ public class BookController {
     // add book passing book object in body
     @PostMapping("/add")
     public Response addBook(@RequestBody Book book, HttpServletRequest request){
-        if (request.getSession().getAttribute("userRole").equals("admin")){
+        Response response = new Response<>();
+
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+        }
+
+        else if (request.getSession().getAttribute("userRole").equals("admin")){
             return bookServiceImpl.addNewBook(book);
         }
-        Response response = new Response<>();
         response.setMessage("User not authorized to add book.");
         return response;
     }
 
     @PutMapping("/update-stock")
     public Response updateStock(@RequestParam int bookId, int availability, HttpServletRequest request){
-        if (request.getSession().getAttribute("userRole").equals("admin")){
+        Response response = new Response<>();
+
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+
+        }
+        else if (request.getSession().getAttribute("userRole").equals("admin")){
             return bookServiceImpl.updateBookAvailability(bookId, availability);
         }
-        Response response = new Response<>();
         response.setMessage("User not authorized to update stocks.");
         return response;
     }
@@ -62,10 +74,16 @@ public class BookController {
     @DeleteMapping("/delete/{bookId}")
 
     public Response deleteBook(@PathVariable int bookId, HttpServletRequest request){
-        if (request.getSession().getAttribute("userRole").equals("admin")){
+        Response response = new Response<>();
+
+        if(request.getSession().getAttribute("userRole")==null){
+            response.setMessage("You need to login first.");
+            return response;
+
+        }
+        else if (request.getSession().getAttribute("userRole").equals("admin")){
             return bookServiceImpl.deleteBookById(bookId);
         }
-        Response response = new Response<>();
         response.setMessage("User not authorized to delete a book.");
         return response;
     }

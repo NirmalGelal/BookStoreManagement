@@ -2,18 +2,19 @@ package com.example.bookstore.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "ShoppingCart")
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private  int id;
-    @OneToOne (fetch = FetchType.LAZY)
+    private int id;
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
-    @OneToMany (fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Book> books;
     @Column(name = "TotalAmount")
     private double totalAmount;
@@ -39,46 +40,25 @@ public class ShoppingCart {
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
+
     public List<Book> getBooks() {
         return books;
     }
+
     public void setBooks(List<Book> books) {
         this.books = books;
     }
+
     public double getTotalAmount() {
         return totalAmount;
     }
+
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-    public String addBook(Book book){
-        books.add(book);
-        return "Book added to cart successfully";
-    }
-    public String removeBook (Book book){
-        if(!books.isEmpty()) {
-            books.remove(book);
-            return "Book removed from cart successfully";
-        }
-        else return "Cart is empty";
-    }
-    public String clearCart(){
-        if(!books.isEmpty()){
-            books.clear();
-            return "Cart cleared successfully";
-        }
-        else return "Cart is empty";
-    }
-    public double calculateTotalAmount(){
-        double totalAmount = 0;
-        for (Book book:books
-             ) {
-            totalAmount += book.getPrice();
-        }
-        return totalAmount;
     }
 
 }
