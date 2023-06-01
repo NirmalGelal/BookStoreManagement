@@ -89,4 +89,5 @@ public class ReviewServiceImpl implements ReviewService
         response.setData(averageReviewResponseDto);
         return response;
     }
+
 }

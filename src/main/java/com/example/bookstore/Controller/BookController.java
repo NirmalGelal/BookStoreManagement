@@ -4,6 +4,7 @@ import com.example.bookstore.dto.response.Response;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.service.impl.BookServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.boot.model.internal.XMLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class BookController {
 
     // list all books
     @GetMapping("/books")
-    public Response getAllBooks(){
-        return bookServiceImpl.getAllBooks();
+    public Response getAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "id") String sortBy){
+        return bookServiceImpl.getAllBooks(page, size, sortBy);
     }
 
     // list book based on keywords

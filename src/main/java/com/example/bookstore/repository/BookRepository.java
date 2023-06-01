@@ -18,10 +18,11 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> searchBook(@Param("keyword") String keyword);
     Book save(Book book);
 
-
     int deleteBookById(int id);
 
     @Modifying
     @Query("UPDATE Book b set b.availability=:availability where b.id=:id")
-    void updateById(int id, int availability);
+    void updateAvailabilityById(int id, int availability);
+
+
 }

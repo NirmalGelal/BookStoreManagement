@@ -6,6 +6,10 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.service.BookService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,10 +35,10 @@ public class BookServiceImpl implements BookService {
         return response;
     }
     @Override
-    public Response getAllBooks() {
+    public Response getAllBooks(int page, int size, String sortBy) {
 
-        Response<List<Book>> response = new Response<>();
-        List<Book> bookList = bookRepository.findAll();
+        Response<Page<Book>> response = new Response<>();
+        Page<Book> bookList =  bookRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy)));
         response.setMessage("Books retrieved successfully");
         response.setData(bookList);
         return response;
@@ -45,7 +49,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> book = bookRepository.findById(bookId);
         if(book.isPresent()) {
             int newAvailability = book.get().getAvailability() - 1;
-            bookRepository.updateById(bookId, newAvailability);
+            bookRepository.updateAvailabilityById(bookId, newAvailability);
             response.setMessage("Book deleted successfully");
             response.setData("New stock updated");
             return response;
@@ -85,11 +89,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public Response updateBookAvailability(int bookId, int quantity) {
         Response response = new Response();
-        bookRepository.updateById(bookId, quantity);
+        bookRepository.updateAvailabilityById(bookId, quantity);
         int newStock = bookRepository.findById(bookId).get().getAvailability();
         response.setData("New stock quantity of bookId "+ bookId+" is "+ newStock );
         response.setMessage("Availability updated.");
         return response;
+    }
+
+    @Override
+    public String updateBookById(int bookId){
+//        bookRepository.updateById(bookId);
+        return "";
     }
 
 

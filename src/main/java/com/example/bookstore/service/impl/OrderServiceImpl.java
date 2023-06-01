@@ -137,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
                         response.setMessage("No book available (stock out)");
                         return response;
                     }
-                    bookRepository.updateById(bookId, book.get().getAvailability() - 1);
+                    bookRepository.updateAvailabilityById(bookId, book.get().getAvailability() - 1);
                     newBooks.add(book.get());
                 }
                 order.setUser(userRepository.findById(userId));
@@ -150,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
                 for (int bookId : updateOrderRequestDto.getBookIds()) {
                     Optional<Book> book = bookRepository.findById(bookId);
                     int newAvailability = book.get().getAvailability() - 1;
-                    bookRepository.updateById(bookId, newAvailability);
+                    bookRepository.updateAvailabilityById(bookId, newAvailability);
                 }
 
                 response.setMessage("Order updated successfully");
@@ -173,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
         // increase the stock of a book if order is cancelled
         for(Book book: books){
             int newAvailability = book.getAvailability() + 1;
-            bookRepository.updateById(book.getId(), newAvailability);
+            bookRepository.updateAvailabilityById(book.getId(), newAvailability);
         }
         orderRepository.deleteById(order.getId());
 
