@@ -1,5 +1,6 @@
 package com.example.bookstore.NewController;
 
+import com.example.bookstore.model.Book;
 import com.example.bookstore.service.impl.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,13 +25,29 @@ public class NewBookController {
         return "redirect:/books";
     }
 
-//    @PutMapping("update-book/{id}")
-//    public String updateBookById(@PathVariable int id){
-//
-//    }
+    @GetMapping("/add-book-form")
+    public String addBookForm(Model model){
+        model.addAttribute("book",new Book());
+        return "addBookForm";
+    }
 
-    @GetMapping("/update")
-    public String updateBooks(){
-        return "updateBook";
+    @PostMapping("/add-book")
+    public String addBooks(Model model,@ModelAttribute Book book){
+        bookServiceImpl.addNewBook(book);
+        return "redirect:/books";
+    }
+
+    @GetMapping("/update-book-form/{id}")
+    public String updateBookForm(Model model, @PathVariable int id){
+        Book book = bookServiceImpl.searchById(id).getData();
+        model.addAttribute("book",book);
+        return "updateBookForm";
+    }
+
+    @PutMapping("/update-book")
+    public String updateBook(Model model, @ModelAttribute Book book){
+        bookServiceImpl.updateBook(book);
+//        model.addAttribute("book", book);5
+        return "redirect:/books";
     }
 }

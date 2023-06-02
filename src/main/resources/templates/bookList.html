@@ -17,6 +17,9 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="orders" th:href="@{/orders}">Orders</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" th:href="@{/users}" >Users</a>
+        </li>
     </ul>
     <br>
     <div class="container">
@@ -33,18 +36,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="book:${allBooks}">
-                <td th:text="B00+${book.id}"></td>
-                <td th:text="${book.title}"></td>
-                <td th:text="${book.author}"></td>
-                <td th:text="${book.genre}"></td>
-                <td th:text="${book.price}"></td>
-                <td th:text="${book.availability}"></td>
+            <tr th:each="singlebook:${allBooks}">
+                <td th:text="B00+${singlebook.id}"></td>
+                <td th:text="${singlebook.title}"></td>
+                <td th:text="${singlebook.author}"></td>
+                <td th:text="${singlebook.genre}"></td>
+                <td th:text="${singlebook.price}"></td>
+                <td th:text="${singlebook.availability}"></td>
                 <td>
-                    <form style="display: inline">
-                        <button type="button" class="btn btn-outline-primary">Update</button>
+                    <form style="display: inline" th:action="@{/update-book-form/{id}(id=${singlebook.id})}"
+                          th:method="get">
+                        <button type="submit" class="btn btn-outline-primary">Update</button>
                     </form>
-                    <form style="display: inline" th:action="@{/delete-book/{id}(id=${book.id})}" th:method="delete">
+                    <form style="display: inline" th:action="@{/delete-book/{id}(id=${singlebook.id})}" th:method="delete">
                         <button type="submit" class="btn btn-outline-danger">Delete</button>
                     </form>
                 </td>
@@ -54,7 +58,9 @@
         </table>
     </div>
     <div class="col-md-12 text-center">
-        <button type="button" class="btn btn-primary">Add Book</button>
+        <form th:action="@{/add-book-form}">
+            <button type="submit" class="btn btn-primary">Add Book</button>
+        </form>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>

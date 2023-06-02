@@ -46,7 +46,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public Response getAllOrders(HttpServletRequest request){
+    public Response getAllOrders(HttpServletRequest request, @RequestParam (defaultValue = "1") int page, @RequestParam (defaultValue = "3") int size, @RequestParam (defaultValue = "id") String sortBy ){
         Response response = new Response<>();
 
         if(request.getSession().getAttribute("userRole")==null){
@@ -55,7 +55,7 @@ public class OrderController {
 
         }
         else if(request.getSession().getAttribute("userRole").equals("admin")){
-            return orderServiceImpl.getAllOrders();
+            return orderServiceImpl.getAllOrders(page-1, size, sortBy);
         }
         response.setMessage("User not authorized to view orders.");
         return response;

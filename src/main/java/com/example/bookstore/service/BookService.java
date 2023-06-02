@@ -10,7 +10,7 @@ public interface BookService {
     public Response searchBook(String keyword);
     public Response searchById(int id);
     public Response updateBookAvailability(int bookId, int quantity);
-    public String updateBookById(int bookId);
+    public String updateBook(Book book);
     public Response deleteBookById(int id);
 
 }

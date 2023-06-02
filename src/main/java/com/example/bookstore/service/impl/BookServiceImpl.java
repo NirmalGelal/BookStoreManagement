@@ -47,7 +47,7 @@ public class BookServiceImpl implements BookService {
     public Response deleteBookById(int bookId) {
         Response response = new Response<>();
         Optional<Book> book = bookRepository.findById(bookId);
-        if(book.isPresent()) {
+        if(book.isPresent() && book.get().getAvailability()>=1) {
             int newAvailability = book.get().getAvailability() - 1;
             bookRepository.updateAvailabilityById(bookId, newAvailability);
             response.setMessage("Book deleted successfully");
@@ -73,7 +73,7 @@ public class BookServiceImpl implements BookService {
         return response;
     }
     @Override
-    public Response searchById(int id) {
+    public Response<Book> searchById(int id) {
         Response<Book> response = new Response<>();
         Book book = bookRepository.searchById(id);
         if(book != null) {
@@ -90,15 +90,15 @@ public class BookServiceImpl implements BookService {
     public Response updateBookAvailability(int bookId, int quantity) {
         Response response = new Response();
         bookRepository.updateAvailabilityById(bookId, quantity);
-        int newStock = bookRepository.findById(bookId).get().getAvailability();
+        int newStock = bookRepository.searchById(bookId).getAvailability();
         response.setData("New stock quantity of bookId "+ bookId+" is "+ newStock );
         response.setMessage("Availability updated.");
         return response;
     }
 
     @Override
-    public String updateBookById(int bookId){
-//        bookRepository.updateById(bookId);
+    public String updateBook( Book book){
+        bookRepository.save(book);
         return "";
     }
 

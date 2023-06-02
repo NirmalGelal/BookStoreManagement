@@ -13,6 +13,9 @@ import com.example.bookstore.repository.UserRepository;
 import com.example.bookstore.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,17 +102,17 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
-    public Response getAllOrders(){
-        Response<List<Order>> response = new Response();
-        List<Order> orders = orderRepository.getOrders();
+    public Response<Page<Order>> getAllOrders(int page, int size, String sortBy){
+        Response<Page<Order>> response = new Response();
+        Page<Order> orders = orderRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy)));
         if(!orders.isEmpty()){
             response.setMessage("Orders retrieved successfully");
-            response.setData(orderRepository.getOrders());
+            response.setData(orderRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy))));
             return response;
         }
         response.setMessage("No orders found");
         response.setData(null);
-        Response<List<Order>> response1 = response;
+        Response<Page<Order>> response1 = response;
         return response1;
     }
 
@@ -183,6 +186,14 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public Order getOrderById(int orderId){
+        return orderRepository.findById(orderId).get();
+    }
 
+    @Override
+    public Order save(Order order){
+        return orderRepository.save(order);
+    }
 
 }
