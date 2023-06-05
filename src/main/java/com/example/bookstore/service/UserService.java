@@ -6,7 +6,7 @@ import com.example.bookstore.model.User;
 
 public interface UserService {
     public Response registerUser(User user);
-    public Response findAllUsers();
+    public Response findAllUsers(int page, int size, String sortBy);
     public Response findUserById(int id);
     public Response loginUser(LoginRequestDto loginRequestDto);
     public Response updateUser(int id,User user);

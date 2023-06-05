@@ -23,7 +23,7 @@
 </ul>
 <br>
 <div class="container">
-  <table class="table table-bordered table-stripped" id="book-table">
+  <table class="table table-bordered table-stripped" id="user-table">
     <thead>
     <tr>
       <th scope="col">User Id</th>
@@ -35,13 +35,13 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user:${users}">
-      <td th:text="U00+${user.id}"></td>
-      <td th:text="${user.username}"></td>
-      <td th:text="${user.email}"></td>
-      <td th:text="${user.role}"></td>
+    <tr th:each="singleUser:${users}">
+      <td th:text="U00+${singleUser.id}"></td>
+      <td th:text="${singleUser.username}"></td>
+      <td th:text="${singleUser.email}"></td>
+      <td th:text="${singleUser.role}"></td>
       <td>
-        <form th:action="@{/update-user-form/{id}(id=${user.id})}">
+        <form th:action="@{/update-user-form/{id}(id=${singleUser.id})}">
           <button type="submit" class="btn btn-outline-primary">Update</button>
         </form>
         <!--            <button type="button" class="btn btn-outline-danger">Cancel</button>-->
@@ -52,8 +52,8 @@
   </table>
 </div>
     <div class="col-md-12 text-center">
-      <form>
-        <button type="button" class="btn btn-primary">Create new User</button>
+      <form th:action="@{/register-user}" th:method="post">
+        <button type="submit" class="btn btn-primary">Create new User</button>
       </form>
     </div>
 
@@ -61,9 +61,9 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('#book-table').DataTable();
-  });
+  // $(document).ready(function () {
+  //   $('#user-table').DataTable();
+  // });
 </script>
 </body>
 </html>

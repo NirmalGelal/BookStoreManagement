@@ -24,14 +24,14 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Response findAllUsers(HttpServletRequest request){
+    public Response findAllUsers(HttpServletRequest request, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "id") String sortBy){
         Response<String> response = new Response<>();
         if(request.getSession().getAttribute("userRole")==null){
             response.setMessage("You need to login first.");
             return response;
         }
         else if (request.getSession().getAttribute("userRole").equals("admin")){
-            return  userServiceImpl.findAllUsers();
+            return  userServiceImpl.findAllUsers(page-1, size, sortBy);
         }
         response.setMessage("User not authorized, please login as admin.");
         response.setData(null);

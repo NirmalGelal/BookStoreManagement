@@ -3,12 +3,10 @@ package com.example.bookstore.NewController;
 import com.example.bookstore.model.User;
 import com.example.bookstore.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +17,8 @@ public class NewUserController {
     private UserServiceImpl userServiceImpl;
 
     @GetMapping("/users")
-    public String getAllUsers(Model model){
-        List<User> users = (List<User>) userServiceImpl.findAllUsers().getData();
+    public String getAllUsers(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "3") int size, @RequestParam(defaultValue = "id") String sortBy){
+        Page<User> users = (Page<User>) (userServiceImpl.findAllUsers(page-1, size, sortBy).getData());
         model.addAttribute("users",users);
         return "/userList";
     }
@@ -33,8 +31,16 @@ public class NewUserController {
     }
 
     @PostMapping("/update-user")
-    public String registerUser(Model model, @ModelAttribute User user){
+    public String updateUser(Model model, @ModelAttribute User user){
         userServiceImpl.registerUser(user);
         return "redirect:/users";
     }
+
+    @PostMapping ("/register-user")
+    public String registerUserForm(Model model){
+        User user = new User();
+        model.addAttribute("user", user);
+        return "/registerUserForm";
+    }
+
 }

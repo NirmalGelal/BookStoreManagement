@@ -6,9 +6,11 @@ import com.example.bookstore.model.User;
 import com.example.bookstore.repository.UserRepository;
 import com.example.bookstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 
 @Service
@@ -75,10 +77,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response findAllUsers() {
-        Response<List<User>> response = new Response<>();
+    public Response findAllUsers(int page, int size, String sortBy) {
+        Response<Page<User>> response = new Response<>();
         response.setMessage("Users retrieved successfully");
-        response.setData(userRepository.findAll());
+        Page<User> users = userRepository.findAll(PageRequest.of(page,size, Sort.by(sortBy)));
+        response.setData(users);
         return response;
     }
 }
